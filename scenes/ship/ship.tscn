@@ -1,0 +1,190 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://scenes/ship/thrusters.gd" type="Script" id=1]
+[ext_resource path="res://art/explosion.png" type="Texture" id=2]
+[ext_resource path="res://art/triangle.png" type="Texture" id=3]
+[ext_resource path="res://scenes/ship/ship.gd" type="Script" id=4]
+[ext_resource path="res://scenes/ship/sensors.gd" type="Script" id=5]
+[ext_resource path="res://scenes/ship/weapon/weapon.gd" type="Script" id=6]
+[ext_resource path="res://scenes/ship/weapon/weapon_system.gd" type="Script" id=7]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.571429, 1 )
+colors = PoolColorArray( 1, 0.474609, 0, 1, 0.971191, 0.74059, 0.0151749, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=9]
+emission_shape = 2
+emission_box_extents = Vector3( 1, 2, 1 )
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 100.0
+initial_velocity_random = 0.2
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -5.0
+scale = 3.0
+scale_random = 0.8
+color_ramp = SubResource( 2 )
+hue_variation = -0.06
+
+[sub_resource type="Gradient" id=7]
+offsets = PoolRealArray( 0.0310559, 0.596273, 1 )
+colors = PoolColorArray( 1, 0, 0, 1, 1, 0.667385, 0.128906, 1, 1, 0.968627, 0, 0 )
+
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+lifetime_randomness = 0.98
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 88.23
+initial_velocity_random = 0.54
+angular_velocity = 10000.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle_random = 1.0
+scale = 0.5
+scale_random = 1.0
+color = Color( 0.992157, 0.952941, 0, 0.776471 )
+color_ramp = SubResource( 8 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 15.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 75.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -5.0
+color_ramp = SubResource( 2 )
+hue_variation = -0.06
+
+[node name="Ship" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 4 )
+rotation_speed = 4.0
+thruster_speed = 75
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[node name="BoostFlames" type="Particles2D" parent="."]
+position = Vector2( -8, 0 )
+emitting = false
+amount = 100
+lifetime = 1.5
+local_coords = false
+process_material = SubResource( 9 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 4, 0 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+build_mode = 1
+polygon = PoolVector2Array( 14, 0, -8, -13, -8, 13 )
+
+[node name="Splosion" type="Particles2D" parent="."]
+visible = false
+emitting = false
+amount = 25
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.78
+randomness = 0.54
+process_material = SubResource( 6 )
+texture = ExtResource( 2 )
+
+[node name="Thrusters" type="Node2D" parent="."]
+script = ExtResource( 1 )
+
+[node name="RightForward" type="Particles2D" parent="Thrusters"]
+position = Vector2( 7, 4 )
+rotation = -1.5708
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="LeftForward" type="Particles2D" parent="Thrusters"]
+position = Vector2( 7, -4 )
+rotation = 1.57079
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="LeftAft" type="Particles2D" parent="Thrusters"]
+position = Vector2( -4, -10 )
+rotation = 1.57079
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="RightAft" type="Particles2D" parent="Thrusters"]
+position = Vector2( -4, 10 )
+rotation = -1.5708
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="ForwardRight" type="Particles2D" parent="Thrusters"]
+position = Vector2( 7, 4 )
+rotation = 3.14159
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="ForwardLeft" type="Particles2D" parent="Thrusters"]
+position = Vector2( 7, -4 )
+rotation = 3.14159
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="AftLeft" type="Particles2D" parent="Thrusters"]
+position = Vector2( -8, -9 )
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="AftRight" type="Particles2D" parent="Thrusters"]
+position = Vector2( -8, 9 )
+emitting = false
+amount = 20
+lifetime = 0.1
+process_material = SubResource( 3 )
+
+[node name="Sensors" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="SensorTimer" type="Timer" parent="Sensors"]
+autostart = true
+
+[node name="Weapons" type="Node2D" parent="."]
+script = ExtResource( 7 )
+
+[node name="Blaster" type="Node2D" parent="Weapons"]
+script = ExtResource( 6 )
+proj_speed = 1500
+
+[node name="FireRateTimer" type="Timer" parent="Weapons/Blaster"]
+one_shot = true
+
+[connection signal="timeout" from="Sensors/SensorTimer" to="Sensors" method="_on_SensorTimer_timeout"]
