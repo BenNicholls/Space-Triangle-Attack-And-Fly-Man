@@ -1,3 +1,4 @@
+class_name Ship
 extends KinematicBody2D
 
 signal ship_destroyed
@@ -14,6 +15,8 @@ var thrusting_dir: Vector2 setget set_thrusting_dir #thrusting dir is an (HDIR, 
 var disabled : bool
 var boosting: bool setget set_boosting
 
+func _ready() -> void:
+	$Weapons.ship = self
 
 func _physics_process(delta):
 	if disabled:

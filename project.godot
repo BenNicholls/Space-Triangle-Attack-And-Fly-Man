@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/ship/sensors.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Ship",
+"language": "GDScript",
+"path": "res://scenes/ship/ship.gd"
+}, {
 "base": "Node2D",
 "class": "Weapon",
 "language": "GDScript",
@@ -33,6 +38,7 @@ _global_script_class_icons={
 "Projectile": "",
 "Sector": "",
 "SensorSystem": "",
+"Ship": "",
 "Weapon": ""
 }
 
@@ -116,6 +122,7 @@ shoot={
 
 common/enable_pause_aware_picking=true
 2d/default_gravity=0
+2d/default_linear_damp=0.0
 
 [rendering]
 
