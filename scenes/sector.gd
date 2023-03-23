@@ -1,5 +1,5 @@
-extends Node2D
 class_name Sector
+extends Node2D
 
 
 func get_objects_in_range(pos: Vector2, search_range: float) -> Dictionary:

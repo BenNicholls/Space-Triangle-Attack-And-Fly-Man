@@ -1,12 +1,11 @@
 extends Node
 
-var needsToRespawn : bool = false
-onready var playerShip = $Player/Ship
+var needsToRespawn := false
+@onready var playerShip = $Player/Ship
 
 
 func _ready():
-	# connect ship weapon systems to the projectile manager
-	playerShip.get_node("Weapons").connect("projectile_fired", $ProjectileManager, "_on_projectile_fired")
+	playershipSetup()	
 
 
 func _process(_delta):
@@ -15,13 +14,30 @@ func _process(_delta):
 	if needsToRespawn and Input.is_action_just_pressed("ui_accept"):
 		needsToRespawn = false
 		playerShip.spawn()
-		$Player/Ship/TargettingHUD.enabled = true
+		%TargettingHUD.enabled = true
 		playerShip.position = Vector2(100, 100)
 		$UI/RespawnLabel.hide()
 
 
+# connect signals for the player's ship to UI elements, manager singletons, etc.
+func playershipSetup():
+	if playerShip == null:
+		printerr("No player ship to setup! Doh!")
+		return
+	
+	# connect ship weapon systems to the projectile manager
+	playerShip.get_node("Weapons").projectile_fired.connect($ProjectileManager._on_projectile_fired)
+	
+	#connect ship sensors to the targetting hud display
+	%TargettingHUD.playerShip = playerShip
+	var sensorSystem: SensorSystem = playerShip.get_node("Sensors")
+	sensorSystem.scan_complete.connect(%TargettingHUD._on_Sensors_scan_complete)
+	sensorSystem.new_object_detected.connect(%TargettingHUD._on_Sensors_new_object_detected)
+	sensorSystem.tracked_object_lost.connect(%TargettingHUD._on_Sensors_tracked_object_lost)
+	playerShip.ship_destroyed.connect(_on_Ship_ship_destroyed)
+
+
 func _on_Ship_ship_destroyed():
 	$UI/RespawnLabel.show()
-	$Player/Ship/TargettingHUD.enabled = false
+	%TargettingHUD.enabled = false
 	needsToRespawn = true
-

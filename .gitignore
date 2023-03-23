@@ -3,3 +3,5 @@
 .vscode
 art/pdn
 export_presets.cfg
+.godot/
+addons/

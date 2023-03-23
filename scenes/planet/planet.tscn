@@ -1,26 +1,26 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://dd5tn3o4jalev"]
 
-[ext_resource path="res://scenes/planet/planet.gd" type="Script" id=1]
-[ext_resource path="res://art/planet.png" type="Texture" id=2]
+[ext_resource type="Script" path="res://scenes/planet/planet.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c7mrs2ya0cww2" path="res://art/planet.png" id="2"]
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id="5"]
 radius = 212.339
 
-[sub_resource type="CapsuleShape2D" id=6]
+[sub_resource type="CapsuleShape2D" id="6"]
 height = 27.0
 
 [node name="Planet" type="StaticBody2D"]
-position = Vector2( 1128, 727 )
-scale = Vector2( 3, 3 )
-script = ExtResource( 1 )
+position = Vector2(1128, 727)
+scale = Vector2(3, 3)
+script = ExtResource("1")
 
-[node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 2 )
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 3, -4.5 )
-shape = SubResource( 5 )
+position = Vector2(3, -4.5)
+shape = SubResource("5")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2( -210.5, 25.5 )
-shape = SubResource( 6 )
+position = Vector2(-210.5, 25.5)
+shape = SubResource("6")

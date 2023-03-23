@@ -15,7 +15,6 @@ func _ready() -> void:
 	thrusters.append($RightForward)
 	thrusters.append($ForwardRight)
 
-
 func fire_rotation_thrusters(rotation_direction: int) -> void:
 	if rotation_direction == Defs.RotDir.CCW:
 		for thruster in [RIGHTFORWARD, LEFTAFT]:
@@ -44,7 +43,7 @@ func fire_thrusters(dir: Vector2) -> void:
 			_stop(thrusters[i])
 
 
-func _fire(thruster : Particles2D) -> void:
+func _fire(thruster : GPUParticles2D) -> void:
 	# do not fire thruster that is already firing
 	if thruster.emitting && !thruster.one_shot:
 		return
@@ -55,7 +54,7 @@ func _fire(thruster : Particles2D) -> void:
 	thruster.emitting = true
 
 
-func _fire_once(thruster : Particles2D) -> void:
+func _fire_once(thruster : GPUParticles2D) -> void:
 	if thruster.emitting:
 		return
 
@@ -64,7 +63,7 @@ func _fire_once(thruster : Particles2D) -> void:
 	thruster.emitting = true
 
 
-func _stop(thruster: Particles2D) -> void:
+func _stop(thruster: GPUParticles2D) -> void:
 	if !thruster.emitting:
 		return
 

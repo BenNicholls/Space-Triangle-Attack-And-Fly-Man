@@ -2,13 +2,15 @@ extends Node2D
 
 signal projectile_fired(proj) #proj is a Projectile node (see Projectile.gd)
 
-var firing: bool = false setget set_firing
+var firing: bool = false: set = set_firing
 var ship: Ship #attached ship. TODO: weapons can be attached to more than just ships.
 
 
 func _ready() -> void:
 	for node in get_children():
-		node.connect("projectile_fired", self, "_on_projectile_fired")
+		if node is Weapon:
+			node.projectile_fired.connect(_on_projectile_fired)
+		
 
 
 func _physics_process(_delta: float) -> void:
@@ -28,4 +30,4 @@ func _on_projectile_fired(proj):
 	proj.global_position = global_position
 	proj.velocity = proj.velocity.rotated(global_rotation) + ship.velocity
 	proj.rotate(global_rotation)
-	emit_signal("projectile_fired", proj)
+	projectile_fired.emit(proj)

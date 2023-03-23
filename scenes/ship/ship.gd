@@ -1,22 +1,23 @@
 class_name Ship
-extends KinematicBody2D
+extends CharacterBody2D
 
 signal ship_destroyed
 
-export (int) var accel = 250
-export(float) var rotation_speed = 5
-export(int) var thruster_speed = 100
+@export var accel = 250
+@export var rotation_speed: float = 5
+@export var thruster_speed: int = 100
 
-onready var thrusters = $Thrusters
-var velocity := Vector2()
 var target := Vector2() #normalized vector for where ship wants to aim
 var rotation_dir: int = 0
-var thrusting_dir: Vector2 setget set_thrusting_dir #thrusting dir is an (HDIR, VDIR) pair
+var thrusting_dir: Vector2: set = set_thrusting_dir
 var disabled : bool
-var boosting: bool setget set_boosting
+var boosting: bool: set = set_boosting
+@onready var thrusters = $Thrusters
+
 
 func _ready() -> void:
 	$Weapons.ship = self
+
 
 func _physics_process(delta):
 	if disabled:
@@ -30,11 +31,19 @@ func _physics_process(delta):
 	if boosting:
 		impulse += get_forward_vec()*accel
 	velocity = velocity + impulse*delta
+	
+	if boosting:
+		$BoostFlames.process_material.set_shader_parameter("initial_velocity_vec", velocity)
 
-	var collision = move_and_collide(velocity*delta)
-	if collision != null:
-		if velocity.length() > 100:
-			ship_destroyed()
+	var collision = move_and_collide(velocity*delta, false, 0.08, true)
+	if collision != null:		
+		var crash_velo := velocity.project(collision.get_normal())
+		if crash_velo.length() > 200:
+			destroy()
+		else:
+			velocity = -crash_velo
+			if !$AnimationPlayer.is_playing():
+				$AnimationPlayer.play("ouch")
 
 	if thrusting_dir != Vector2.ZERO:
 		thrusters.fire_thrusters(thrusting_dir)
@@ -43,10 +52,7 @@ func _physics_process(delta):
 # initialize ship
 func spawn() -> void:
 	disabled = false
-	velocity = Vector2()
-	$Splosion.restart()
-	$Splosion.hide()
-	$Sprite.show()
+	$Visuals.show()
 
 
 func rotate_ship(delta) -> void:
@@ -86,15 +92,17 @@ func set_boosting(boost: bool) -> void:
 
 
 func set_firing(fire: bool = true) -> void:
+	if disabled:
+		return
 	$Weapons.firing = fire
 
 
-func ship_destroyed() -> void:
+func destroy() -> void:
 	velocity = Vector2.ZERO
+	boosting = false
 	emit_signal("ship_destroyed")
-	$Splosion.show()
 	$Splosion.emitting = true
-	$Sprite.hide()
+	$Visuals.hide()
 	$BoostFlames.emitting = false
 	self.disabled = true
 

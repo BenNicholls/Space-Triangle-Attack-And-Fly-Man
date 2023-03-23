@@ -1,18 +1,21 @@
-tool
 extends Node2D
 
 var IconScene = preload("res://scenes/ship/hud/sensor_icon.tscn")
 var icons = {} #icons key:value are {object_id:$SensorIconNode}
 
+var playerShip: Ship
 var sensors : SensorSystem
-var enabled: bool = true setget set_enabled
+var enabled: bool = true: set = set_enabled
 
 func _process(delta):
 	#this keeps the ship's rotation from activating the buzzsaw :)
-	global_rotation = 0
+	#global_rotation = 0
 
-	if !enabled:
+	if !enabled or playerShip == null:
 		return
+		
+	if sensors == null:
+		sensors = playerShip.get_node("Sensors")		
 
 	for object_id in icons:
 		#update icon positions
@@ -21,7 +24,7 @@ func _process(delta):
 			_remove_object_icon(object_id)
 			continue
 
-		var angle = data.position.angle_to_point(global_position)
+		var angle = playerShip.global_position.angle_to_point(data.position)
 		icons[object_id].update_position(angle)
 
 	$Reticle.rotate(delta/20)
@@ -45,7 +48,7 @@ func set_enabled(en: bool = true) -> void:
 
 
 func _add_object_icon(object_id) -> void:
-	var icon = IconScene.instance()
+	var icon = IconScene.instantiate()
 	add_child(icon)
 	icons[object_id] = icon
 

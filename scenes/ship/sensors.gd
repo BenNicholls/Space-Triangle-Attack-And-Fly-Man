@@ -1,14 +1,14 @@
-extends Node2D
 class_name SensorSystem
-
-enum Modes {ALL, PLANETS, SHIPS, FRIENDLY, HOSTILE}
+extends Node2D
 
 signal new_object_detected(object_id)
 signal tracked_object_lost(object_id)
 signal scan_complete
 
-export(float) var sensor_range: float = 2500
-var sensor_mode: int = Modes.ALL
+enum Modes {ALL, PLANETS, SHIPS, FRIENDLY, HOSTILE}
+
+@export var sensor_range: float = 2500
+var sensor_mode: Modes = Modes.ALL
 var active_tracking: bool = true #if true, will update tracked objects' position each tick
 var tracked_objects = {} #dict elements key:values are {obj_id: scandata}
 
@@ -34,18 +34,18 @@ func scan() -> void:
 
 	# remove tracked objects not in range anymore
 	for object_id in tracked_objects.keys():
-		if !new_objects.has(object_id):
+		if not new_objects.has(object_id):
 			emit_signal("tracked_object_lost", object_id)
 			tracked_objects.erase(object_id)
 
 	# add new objects
 	for object_id in new_objects:
-		if !tracked_objects.has(object_id):
+		if not tracked_objects.has(object_id):
 			var data = ScanData.new()
 			data.position = new_objects[object_id].global_position
 			tracked_objects[object_id] = data
 			emit_signal("new_object_detected", object_id)
-		else:
+		else: #update data for objects that are already being tracked
 			tracked_objects[object_id].position = new_objects[object_id].global_position
 
 	emit_signal("scan_complete")

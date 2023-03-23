@@ -1,0 +1,15 @@
+[gd_resource type="ParticleProcessMaterial" load_steps=3 format=3 uid="uid://bndxw0mggqme6"]
+
+[sub_resource type="Gradient" id="Gradient_schfu"]
+colors = PackedColorArray(0.819608, 0.247059, 0.14902, 1, 1, 1, 0.101961, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_35dnh"]
+gradient = SubResource("Gradient_schfu")
+
+[resource]
+direction = Vector3(-1, 0, 0)
+spread = 7.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 50.0
+color_ramp = SubResource("GradientTexture1D_35dnh")
